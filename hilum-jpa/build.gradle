@@ -1,0 +1,71 @@
+group 'com.hilum'
+version '1.0'
+
+buildscript {
+    ext {
+        springBootVersion = '1.5.8.RELEASE'
+    }
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    ext {
+        springBootVersion = '1.5.8.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+        compile.exclude module: "spring-boot-starter-tomcat"
+        compile.exclude module: "tomcat-jdbc"
+    }
+
+    dependencies {
+        ////////////////----springboot相关库
+        compile("org.springframework.boot:spring-boot-starter-undertow:${springBootVersion}")
+        compile("org.springframework.boot:spring-boot-starter-validation:${springBootVersion}")
+        compile("org.springframework.boot:spring-boot-starter-cache:${springBootVersion}")
+        compile("org.springframework.boot:spring-boot-starter-data-redis:${springBootVersion}")
+        compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+        compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+
+        ////////////////----spring test相关库
+        testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+        testCompile("com.h2database:h2:1.4.196")
+        testCompile("junit:junit:4.12")
+
+        ////////////////----数据库相关库
+        compile('mysql:mysql-connector-java:6.0.5')
+        compile("com.alibaba:druid-spring-boot-starter:1.1.5")
+
+        ////////////////----通用工具库
+        compile("commons-beanutils:commons-beanutils:1.9.3")
+    }
+
+
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = '4.2.1'
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
+
+
+

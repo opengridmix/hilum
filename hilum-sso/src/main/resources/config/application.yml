@@ -1,0 +1,82 @@
+appname: hilum-sso
+server:
+  port: ${springBoot.server.port:8080}
+  undertow:
+    accesslog:
+      dir: logs/${appname}.log
+      enabled: true
+      pattern: "\"%{c,tranceId}\" \"%{i,versionCode}\" \"%{i,deviceId}\" %h %l %u %t \"%r\" %s %b \"%{i,Referer}\" \"%{i,User-Agent}\""
+  compression:
+    enabled: true
+    min-response-size: 1
+
+spring:
+  datasource:
+    druid:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: ${springBoot.mysql.url:jdbc:mysql://localhost:3306/hilum-user?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC}
+      userName: ${springBoot.mysql.userName:root}
+      password: ${springBoot.mysql.password:root}
+      initialize: false
+  aop:
+    proxy-target-class: true
+    auto: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+0800
+    serialization: true
+  application:
+    name: ${appname}
+  zipkin:
+    service:
+      name: ${appname}
+  javaMedoly:
+      classPattern: com.hilum.*.*
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    password: redis
+    timeout: 0
+    expiration: 1800
+    pool:
+        maxTotal: 100
+        maxIdle: 10
+        maxWaitMillis: 10000
+
+logging:
+  level:
+    root: ${springBoot.level:info}
+    com.hilum: ${springBoot.level:debug}
+
+
+endpoints:
+  enabled: true
+  sensitive: false
+  actuator:
+    enabled: true
+    sensitive: false
+  beans:
+    id: endpointsBean
+    sensitive: false
+  shutdown:
+    enabled: true
+    sensitive: false
+
+oauth2:
+  jdbc:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: ${springBoot.mysql.url:jdbc:mysql://localhost:3306/oauth2?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC}
+    userName: ${springBoot.mysql.userName:root}
+    password: ${springBoot.mysql.password:root}
+
+feign:
+  hystrix:
+    enable: true
+
+idgen:
+  datacenterid: 1
+  machineid: 1
+
+hilum:
+  otpurl: ${springBoot.otp.url:http://localhost:8081}

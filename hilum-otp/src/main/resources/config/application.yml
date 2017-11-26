@@ -1,0 +1,76 @@
+appname: hilum-otp
+server:
+  port: ${springBoot.server.port:8081}
+  undertow:
+    accesslog:
+      dir: logs/${appname}.log
+      enabled: true
+      pattern: "\"%{c,tranceId}\" \"%{i,versionCode}\" \"%{i,deviceId}\" %h %l %u %t \"%r\" %s %b \"%{i,Referer}\" \"%{i,User-Agent}\""
+  compression:
+    enabled: true
+    min-response-size: 1
+
+spring:
+  datasource:
+    druid:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: ${springBoot.mysql.url:jdbc:mysql://localhost:3306/${appname}?useUnicode=true&characterEncoding=utf-8&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC}
+      userName: ${springBoot.mysql.userName:root}
+      password: ${springBoot.mysql.password:root}
+  aop:
+    proxy-target-class: true
+    auto: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+0800
+    serialization: true
+  application:
+    name: ${appname}
+  zipkin:
+    service:
+      name: ${appname}
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    password: redis
+    timeout: 0
+    expiration: 1800
+    pool:
+        maxTotal: 100
+        maxIdle: 10
+        maxWaitMillis: 10000
+
+logging:
+  level:
+    root: ${springBoot.level:info}
+    com.hilum: ${springBoot.level.hilum:debug}
+
+endpoints:
+  enabled: true
+  sensitive: false
+  actuator:
+    enabled: true
+    sensitive: false
+  beans:
+    id: endpointsBean
+    sensitive: false
+  shutdown:
+    enabled: true
+    sensitive: false
+
+feign:
+  hystrix:
+    enable: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000 #缺省为1000
+
+idgen:
+  datacenterid: 1
+  machineid: 1

@@ -1,0 +1,74 @@
+appname: hilum-app
+server:
+  port: 8085
+  undertow:
+    accesslog:
+      dir: logs/${appname}.log
+      enabled: true
+      pattern: "\"%{c,tranceId}\" \"%{i,versionCode}\" \"%{i,deviceId}\" %h %l %u %t \"%r\" %s %b \"%{i,Referer}\" \"%{i,User-Agent}\""
+  compression:
+    enabled: true
+    min-response-size: 1
+
+spring:
+  datasource:
+    druid:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/hilum?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+      username: root
+      password: root
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    debug: true
+    naming:
+      physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  aop:
+    proxy-target-class: true
+    auto: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: GMT+0800
+    serialization: true
+  application:
+    name: ${appname}
+  zipkin:
+    service:
+      name: ${appname}
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password: redis
+    timeout: 0
+    expiration: 1800
+    pool:
+        maxTotal: 100
+        maxIdle: 10
+        maxWaitMillis: 10000
+
+logging:
+  level:
+    root: info
+
+endpoints:
+  enabled: true
+  sensitive: false
+  actuator:
+    enabled: true
+    sensitive: false
+  beans:
+    id: endpointsBean
+    sensitive: false
+  shutdown:
+    enabled: true
+    sensitive: false
+
+feign:
+  hystrix:
+    enable: true
+
+idgen:
+  datacenterid: 1
+  machineid: 1

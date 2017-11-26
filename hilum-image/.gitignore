@@ -1,0 +1,26 @@
+# IDEA #
+.idea/
+*.iws
+*.ipr
+*.iml
+
+# Eclipse #
+*.classpath
+*.project
+.settings/
+.metadata/
+
+# Maven #
+target/
+
+# Gradle #
+.gradle/
+build/
+classes/
+out/
+
+# other #
+logs/
+bin/
+fileTemplates/
+src/main/generated/
